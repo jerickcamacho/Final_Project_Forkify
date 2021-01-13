@@ -1,1 +1,1 @@
-// Global app controller
+document.querySelector('.search').onsubmit = search;
