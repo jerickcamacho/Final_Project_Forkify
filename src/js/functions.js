@@ -16,7 +16,6 @@ async function search(event) {
     }
 }
 
-
 async function getRecipe(recipeID) {
 
     try {
@@ -28,4 +27,18 @@ async function getRecipe(recipeID) {
         alert('Error in getRecipe, Please check console')
         console.error(error);
     }
+}
+
+async function myLike(recipe){
+
+    const foundRecipe = likeStorage.find(element => element.id == recipe.id) 
+
+    //Check if user already like the recipe 
+    if(foundRecipe){
+        
+        likeStorage = likeStorage.filter(element => element.id != recipe.id);
+
+    } else { 
+        likeStorage.push(recipe)
+    } 
 }

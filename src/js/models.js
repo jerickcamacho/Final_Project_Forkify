@@ -29,11 +29,6 @@ class ResultsItem {
 }
 
 
-
-
-
-
-
 //! ===========================================================================
 //! RECIPE ITEM COMPONENT - renders the recipe upon click of a result item
 //! ===========================================================================
@@ -134,5 +129,9 @@ class Recipe {
 
                 </a>
             </div>`  );
+
+        // attache eventlistner for like buton  
+       const btnLike =  document.querySelector('.recipe__love');
+       btnLike.addEventListener("click", () => myLike(this.recipe));  
     }
 }
