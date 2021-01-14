@@ -30,6 +30,36 @@ class ResultsItem {
 
 
 //! ===========================================================================
+//! LIKE ITEM COMPONENT - renders items on like/heart icon on hover
+//! ===========================================================================
+class LikeItem {
+    constructor(recipe) {
+        this.recipe = recipe;
+        this.parent = document.querySelector('.likes__list');
+    }
+
+    render() {
+        const li = document.createElement('li');
+        this.parent.appendChild(li);
+
+        li.innerHTML = `
+            <a class="likes__link" href="#23456">
+                <figure class="likes__fig">
+                    <img src="${this.recipe.image_url}" alt="Test">
+                </figure>
+                <div class="likes__data">
+                    <h4 class="likes__name">${this.recipe.title}</h4>
+                    <p class="likes__author">${this.recipe.publisher}</p> 
+                </div>
+            </a>
+        `
+    }
+}
+
+
+
+
+//! ===========================================================================
 //! RECIPE ITEM COMPONENT - renders the recipe upon click of a result item
 //! ===========================================================================
 class Recipe {
@@ -131,7 +161,7 @@ class Recipe {
             </div>`  );
 
         // attache eventlistner for like buton  
-       const btnLike =  document.querySelector('.recipe__love');
-       btnLike.addEventListener("click", () => myLike(this.recipe));  
+        const btnLike = document.querySelector('.recipe__love');
+        btnLike.addEventListener("click", () => myLike(this.recipe));
     }
 }
