@@ -29,16 +29,19 @@ async function getRecipe(recipeID) {
     }
 }
 
-async function myLike(recipe){
+async function myLike(recipe) {
+    const likesParent = document.querySelector('.likes__list');
+    const foundRecipe = likeStorage.find(element => element.id == recipe.id)
 
-    const foundRecipe = likeStorage.find(element => element.id == recipe.id) 
+    // check if user already like the recipe 
+    foundRecipe
+        ? likeStorage = likeStorage.filter(element => element.id != recipe.id)
+        : likeStorage.push(recipe)
 
-    //Check if user already like the recipe 
-    if(foundRecipe){
-        
-        likeStorage = likeStorage.filter(element => element.id != recipe.id);
+    // rerender liked items
+    likesParent.innerHTML = ``;
 
-    } else { 
-        likeStorage.push(recipe)
-    } 
+    for (const likedRecipe of likeStorage) {
+        new LikeItem(likedRecipe).render();
+    }
 }
