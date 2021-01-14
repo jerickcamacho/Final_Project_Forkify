@@ -1,1 +1,1 @@
-const baseUrl = "https://forkify-api.herokuapp.com/api";
+const baseUrl = "https://forkify-api.herokuapp.com/api/v2";

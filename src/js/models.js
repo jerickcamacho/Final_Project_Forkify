@@ -1,3 +1,6 @@
+//! ===========================================================================
+//! RESULTS ITEM COMPONENT - renders items on search
+//! ===========================================================================
 class ResultsItem {
     constructor(recipe) {
         this.recipe = recipe;
@@ -19,19 +22,28 @@ class ResultsItem {
               <p class="results__author">${this.recipe.publisher}</p>
           </div>
       </a>
-    `;  
-        listItem.addEventListener("click", () => getRecipe(this.recipe.recipe_id));  
-        
+    `;
+        listItem.addEventListener("click", () => getRecipe(this.recipe.id));
+
     }
 }
 
-class Recipe{
-    constructor(recipe){
-        this.recipe = recipe; 
-        this.parent = document.querySelector('.recipe'); 
+
+
+
+
+
+
+//! ===========================================================================
+//! RECIPE ITEM COMPONENT - renders the recipe upon click of a result item
+//! ===========================================================================
+class Recipe {
+    constructor(recipe) {
+        this.recipe = recipe;
+        this.parent = document.querySelector('.recipe');
     }
 
-    render(){
+    render() {
         this.parent.insertAdjacentHTML(`beforeend`, `
             <figure class="recipe__fig">
                 <img src="${this.recipe.image_url}" alt="Tomato" class="recipe__img">
