@@ -15,3 +15,19 @@ async function search(event) {
         console.error(error);
     }
 }
+
+async function getRecipe(recipeID){
+
+    try{
+
+        const response = await axios.get(`${baseUrl}/get?rId=${recipeID}`); 
+        // console.log(response)
+        new Recipe(response.data.recipe).render();  
+
+    } 
+    
+    catch(error){
+        alert('Error in getRecipe, Please check console')
+        console.error(error);
+    }
+}

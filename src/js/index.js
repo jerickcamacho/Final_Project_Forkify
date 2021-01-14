@@ -1,1 +1,1 @@
-document.querySelector('.search').onsubmit = search;
+document.querySelector('.search').onsubmit = search; 
