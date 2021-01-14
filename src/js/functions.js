@@ -29,7 +29,7 @@ async function getRecipe(recipeID) {
     }
 }
 
-async function myLike(recipe) {
+function addToLikes(recipe) {
     const likesParent = document.querySelector('.likes__list');
     const foundRecipe = likeStorage.find(element => element.id == recipe.id)
 
@@ -46,9 +46,11 @@ async function myLike(recipe) {
     }
 }
 
-async function shopLists(recipe){
+function addToShoppingList(recipe) {
 
-    for(const ingredient of recipe.ingredients){
-        new ShoppingListItem(ingredient).render(); 
+    for (const ingredient of recipe.ingredients) {
+        ingredient.id = Math.random().toString().substr(2, 15);
+        shoppinglistStorage.push(ingredient)
+        new ShoppingListItem(ingredient).render();
     }
 }
