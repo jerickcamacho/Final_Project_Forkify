@@ -12,21 +12,25 @@ class ResultsItem {
         this.parent.appendChild(listItem);
 
         listItem.innerHTML = `
-      <a class="results__link results__link--active" href="#23456">
-          <figure class="results__fig">
-              <img src="${this.recipe.image_url}" alt="Test">
-          </figure>
+            <a class="results__link results__link--active" href="#23456">
+                <figure class="results__fig">
+                    <img src="${this.recipe.image_url}" alt="Test">
+                </figure>
 
-          <div class="results__data">
-              <h4 class="results__name">${this.recipe.title}</h4>
-              <p class="results__author">${this.recipe.publisher}</p>
-          </div>
-      </a>
-    `;
+                <div class="results__data">
+                    <h4 class="results__name">${this.recipe.title}</h4>
+                    <p class="results__author">${this.recipe.publisher}</p>
+                </div>
+            </a>
+            `;
+
+        // attach onclick event to render this recipe
         listItem.addEventListener("click", () => getRecipe(this.recipe.id));
-
     }
 }
+
+
+
 
 
 //! ===========================================================================
@@ -53,6 +57,9 @@ class LikeItem {
                 </div>
             </a>
         `
+
+        // attach onclick event to render this recipe
+        li.addEventListener("click", () => getRecipe(this.recipe.id))
     }
 }
 
@@ -70,6 +77,7 @@ class Recipe {
 
     render() {
 
+        this.parent.innerHTML = ``;
         const ingredientsParent = document.createElement('ul');
         ingredientsParent.className = 'recipe__ingredient-list';
 
@@ -160,38 +168,59 @@ class Recipe {
                 </a>
             </div>`  );
 
-        // attache eventlistner for like buton  
+        // attach eventlistner to like/dislike this recipe  
         const btnLike = document.querySelector('.recipe__love');
-        btnLike.addEventListener("click", () => myLike(this.recipe));
+        btnLike.addEventListener("click", () => addToLikes(this.recipe));
 
-          // attache eventlistner for shopping list button 
+        // attach eventlistner add the ingredients to shopping list
         const btnShoppingList = document.getElementById('btn-shoppingList');
-        btnShoppingList.addEventListener("click", () => shopLists(this.recipe));
+        btnShoppingList.addEventListener("click", () => addToShoppingList(this.recipe));
     }
 }
 
-class ShoppingListItem{
-    constructor(ingredient){
-        this.ingredient = ingredient; 
+
+
+
+
+//! ===========================================================================
+//! SHOPPING LIST ITEM COMPONENT - renders items on shopping list
+//! ===========================================================================
+class ShoppingListItem {
+    constructor(ingredient) {
+        this.ingredient = ingredient;
         this.parent = document.querySelector(".shopping__list");
-    }   
-
-    render(){
-        const shoppingItem = document.createElement('li');
-        this.parent.appendChild(shoppingItem); 
-
-        shoppingItem.className = 'shopping__item'; 
-
-        shoppingItem.innerHTML = `<div class="shopping__count">
-            <input type="number" value="${this.ingredient.quantity}" step="${this.ingredient.quantity}">
-            <p>${this.ingredient.unit}</p>
-            </div>
-            <p class="shopping__description">${this.ingredient.description}</p>
-            <button class="shopping__delete btn-tiny">
-            <svg>
-                <use href="img/icons.svg#icon-circle-with-cross"></use>
-            </svg>
-            </button>`;
     }
- 
+
+    render() {
+        const shoppingItem = document.createElement('li');
+        this.parent.appendChild(shoppingItem);
+
+        shoppingItem.className = 'shopping__item';
+        shoppingItem.id = `ing_${this.ingredient.id}`;
+
+        shoppingItem.innerHTML = `
+            <div class="shopping__count">
+                <input type="number" value="${this.ingredient.quantity}" step="${this.ingredient.quantity}">
+                <p>${this.ingredient.unit}</p>
+            </div>
+                <p class="shopping__description">${this.ingredient.description}</p>
+            <button class="shopping__delete btn-tiny" id="deletebtn-${this.ingredient.id}">
+                <svg>
+                    <use href="./image/icons.svg#icon-circle-with-cross"></use>
+                </svg>
+            </button>`;
+
+
+        // attach event listener for deleting this ingredient
+        const btn_delete = document.getElementById(`deletebtn-${this.ingredient.id}`);
+
+        btn_delete.addEventListener('click', () => {
+            document.getElementById(`ing_${this.ingredient.id}`).remove();
+
+            shoppinglistStorage = shoppinglistStorage
+                .filter(ing => ing.id != this.ingredient.id)
+
+        })
+    }
+
 }
