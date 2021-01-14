@@ -45,3 +45,10 @@ async function myLike(recipe) {
         new LikeItem(likedRecipe).render();
     }
 }
+
+async function shopLists(recipe){
+
+    for(const ingredient of recipe.ingredients){
+        new ShoppingListItem(ingredient).render(); 
+    }
+}

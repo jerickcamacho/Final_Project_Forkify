@@ -137,7 +137,7 @@ class Recipe {
 
                 ${ingredientsParent.outerHTML}
 
-                <button class="btn-small recipe__btn">
+                <button class="btn-small recipe__btn" id="btn-shoppingList">
                     <svg class="search__icon">
                         <use href="./image/icons.svg#icon-shopping-cart"></use>
                     </svg>
@@ -163,5 +163,35 @@ class Recipe {
         // attache eventlistner for like buton  
         const btnLike = document.querySelector('.recipe__love');
         btnLike.addEventListener("click", () => myLike(this.recipe));
+
+          // attache eventlistner for shopping list button 
+        const btnShoppingList = document.getElementById('btn-shoppingList');
+        btnShoppingList.addEventListener("click", () => shopLists(this.recipe));
     }
+}
+
+class ShoppingListItem{
+    constructor(ingredient){
+        this.ingredient = ingredient; 
+        this.parent = document.querySelector(".shopping__list");
+    }   
+
+    render(){
+        const shoppingItem = document.createElement('li');
+        this.parent.appendChild(shoppingItem); 
+
+        shoppingItem.className = 'shopping__item'; 
+
+        shoppingItem.innerHTML = `<div class="shopping__count">
+            <input type="number" value="${this.ingredient.quantity}" step="${this.ingredient.quantity}">
+            <p>${this.ingredient.unit}</p>
+            </div>
+            <p class="shopping__description">${this.ingredient.description}</p>
+            <button class="shopping__delete btn-tiny">
+            <svg>
+                <use href="img/icons.svg#icon-circle-with-cross"></use>
+            </svg>
+            </button>`;
+    }
+ 
 }
