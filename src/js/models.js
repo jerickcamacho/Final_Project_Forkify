@@ -12,7 +12,7 @@ class ResultsItem {
         this.parent.appendChild(listItem);
 
         listItem.innerHTML = `
-            <a class="results__link results__link--active" href="#23456">
+            <a class="results__link" href="#23456" data-id="${this.recipe.id}">
                 <figure class="results__fig">
                     <img src="${this.recipe.image_url}" alt="Test">
                 </figure>
@@ -25,7 +25,22 @@ class ResultsItem {
             `;
 
         // attach onclick event to render this recipe
-        listItem.addEventListener("click", () => getRecipe(this.recipe.id));
+        listItem.addEventListener("click", () => {
+            const items = [...document.querySelectorAll('.results__link')]
+
+            // remove active class from other results item
+            for (const a of items) {
+                if (a.classList.contains('results__link--active'))
+                    a.classList.remove('results__link--active')
+            }
+
+            // apply active class to current item
+            const item = document.querySelector(`[data-id='${this.recipe.id}']`)
+            item.classList.add('results__link--active')
+
+            // fetch recipe
+            getRecipe(this.recipe.id);
+        });
     }
 }
 
