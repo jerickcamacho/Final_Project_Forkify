@@ -217,7 +217,7 @@ class ShoppingListItem {
         btn_delete.addEventListener('click', () => {
             document.getElementById(`ing_${this.ingredient.id}`).remove();
 
-            shoppinglistStorage = shoppinglistStorage
+            App.shoppinglistStorage = App.shoppinglistStorage
                 .filter(ing => ing.id != this.ingredient.id)
 
         })
