@@ -5,6 +5,9 @@ async function search(event) {
         const response = await axios.get(`${App.baseurl}/recipes?search=${input.value}`);
         const dataRecipes = response.data.data.recipes
 
+        const resultstList = document.querySelector('.results__list');
+        resultstList.innerHTML = ''; 
+
         for (let dataValue of dataRecipes) {
             new ResultsItem(dataValue).render();
         }
