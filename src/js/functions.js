@@ -50,6 +50,9 @@ function addToLikes(recipe) {
 }
 
 function addToShoppingList(recipe) {
+    
+    const shoppingLists = document.querySelector('.shopping__list');
+    shoppingLists.innerHTML = ''; 
 
     for (const ingredient of recipe.ingredients) {
         ingredient.id = Math.random().toString().substr(2, 15);
