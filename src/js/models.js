@@ -245,3 +245,30 @@ class ShoppingListItem {
     }
 
 }
+
+
+
+
+
+//! ===========================================================================
+//! LOADER COMPONENT - assists in waiting api responses
+//! ===========================================================================
+class Loader {
+    constructor(parentElement) {
+        this.parent = document.querySelector(parentElement);
+    }
+
+    render() {
+        const div = document.createElement('div');
+        div.classList.add('loader')
+
+        div.innerHTML = `
+            <svg>
+                <use href="image/icons.svg#icon-cw"></use>
+            </svg>
+        `
+
+        this.parent.appendChild(div);
+        this.loaderElement = div;
+    }
+}
