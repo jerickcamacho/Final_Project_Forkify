@@ -23,6 +23,9 @@ async function search(event) {
 async function getRecipe(recipeID) {
 
     try {
+
+        new Loader('.recipe').render(); 
+
         const response = await axios.get(`${App.baseurl}/recipes/${recipeID}`);
         new Recipe(response.data.data.recipe).render();
     }
