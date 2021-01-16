@@ -6,7 +6,7 @@ async function search(event) {
         const dataRecipes = response.data.data.recipes
 
         const resultstList = document.querySelector('.results__list');
-        resultstList.innerHTML = ''; 
+        resultstList.innerHTML = '';
 
         for (let dataValue of dataRecipes) {
             new ResultsItem(dataValue).render();
@@ -35,11 +35,18 @@ async function getRecipe(recipeID) {
 function addToLikes(recipe) {
     const likesParent = document.querySelector('.likes__list');
     const foundRecipe = App.likestorage.find(element => element.id == recipe.id)
+    const heartIcon = document.querySelector(`#icon_heart_${recipe.id}`);
 
     // check if user already like the recipe 
-    foundRecipe
-        ? App.likestorage = App.likestorage.filter(element => element.id != recipe.id)
-        : App.likestorage.push(recipe)
+    if (foundRecipe) {
+        App.likestorage = App.likestorage.filter(element => element.id != recipe.id)
+        heartIcon.innerHTML = `<use href="./image/icons.svg#icon-heart-outlined"></use`
+    }
+
+    else {
+        App.likestorage.push(recipe)
+        heartIcon.innerHTML = `<use href="./image/icons.svg#icon-heart"></use>`
+    }
 
     // rerender liked items
     likesParent.innerHTML = ``;
@@ -50,9 +57,9 @@ function addToLikes(recipe) {
 }
 
 function addToShoppingList(recipe) {
-    
+
     const shoppingLists = document.querySelector('.shopping__list');
-    shoppingLists.innerHTML = ''; 
+    shoppingLists.innerHTML = '';
 
     for (const ingredient of recipe.ingredients) {
         ingredient.id = Math.random().toString().substr(2, 15);

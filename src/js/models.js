@@ -88,6 +88,7 @@ class Recipe {
     constructor(recipe) {
         this.recipe = recipe;
         this.parent = document.querySelector('.recipe');
+        this.isLiked = App.likestorage.some(r => r.id == this.recipe.id)
     }
 
     render() {
@@ -149,11 +150,16 @@ class Recipe {
                     </div>
 
                 </div>
+
                 <button class="recipe__love">
-                    <svg class="header__likes">
-                        <use href="./image/icons.svg#icon-heart-outlined"></use>
+                    <svg class="header__likes" id="icon_heart_${this.recipe.id}">
+                    ${this.isLiked
+                ? '<use href="./image/icons.svg#icon-heart"></use>'
+                : '<use href="./image/icons.svg#icon-heart-outlined"></use>'
+            }
                     </svg>
                 </button>
+
             </div>
 
             <div class="recipe__ingredients">
