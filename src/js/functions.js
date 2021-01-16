@@ -1,6 +1,7 @@
 async function search(event) {
     try {
         event.preventDefault();
+        new Loader('.results__list').render();
         const input = document.querySelector('.search__field')
         const response = await axios.get(`${App.baseurl}/recipes?search=${input.value}`);
         const dataRecipes = response.data.data.recipes
