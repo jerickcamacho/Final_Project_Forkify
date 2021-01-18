@@ -92,26 +92,12 @@ class Recipe {
     }
 
     render() {
-
         this.parent.innerHTML = ``;
         const ingredientsParent = document.createElement('ul');
         ingredientsParent.className = 'recipe__ingredient-list';
 
         for (const ingredient of this.recipe.ingredients) {
-            const li = document.createElement('li');
-            ingredientsParent.appendChild(li);
-
-            li.className = 'recipe__item'
-            li.innerHTML = `
-                <svg class="recipe__icon">
-                    <use href="./image/icons.svg#icon-check"></use>
-                </svg>
-                <div class="recipe__count">${ingredient.quantity}</div>
-                <div class="recipe__ingredient">
-                    <span class="recipe__unit">${ingredient.unit}</span>
-                    ${ingredient.description}
-                </div>
-            `
+            new RecipeIngredient(ingredient, ingredientsParent).render()
         }
 
         this.parent.insertAdjacentHTML(`beforeend`, `
@@ -133,16 +119,18 @@ class Recipe {
                     <svg class="recipe__info-icon">
                         <use href="./image/icons.svg#icon-man"></use>
                     </svg>
-                    <span class="recipe__info-data recipe__info-data--people">${this.recipe.servings}</span>
+                    <span class="recipe__info-data recipe__info-data--people">
+                        ${this.recipe.servings}
+                    </span>
                     <span class="recipe__info-text"> servings</span>
 
                     <div class="recipe__info-buttons">
-                        <button class="btn-tiny">
+                        <button class="btn-tiny" id="serving_sub">
                             <svg>
                                 <use href="./image/icons.svg#icon-circle-with-minus"></use>
                             </svg>
                         </button>
-                        <button class="btn-tiny">
+                        <button class="btn-tiny"  id="serving_add">
                             <svg>
                                 <use href="./image/icons.svg#icon-circle-with-plus"></use>
                             </svg>
@@ -187,7 +175,8 @@ class Recipe {
                     </svg>
 
                 </a>
-            </div>`  );
+            </div>`
+        );
 
         // attach eventlistner to like/dislike this recipe  
         const btnLike = document.querySelector('.recipe__love');
@@ -196,8 +185,81 @@ class Recipe {
         // attach eventlistner add the ingredients to shopping list
         const btnShoppingList = document.getElementById('btn-shoppingList');
         btnShoppingList.addEventListener("click", () => addToShoppingList(this.recipe));
+
+        // attach eventlistener for add/sub servings
+        const btnServingAdd = document.getElementById('serving_add');
+        const btnServingSub = document.getElementById('serving_sub');
+        btnServingAdd.addEventListener('click', () => this.updateServings('ADD'));
+        btnServingSub.addEventListener('click', () => this.updateServings('SUB'));
+    }
+
+
+    updateServings(action) {
+        if (this.recipe.servings == 1 && action == 'SUB') return null
+
+        const newServings = action === 'SUB'
+            ? this.recipe.servings - 1
+            : this.recipe.servings + 1;
+
+        // add/sub relatative to step/newservings/current servings
+        this.recipe.ingredients = this.recipe.ingredients.map(ing => {
+            if (ing.quantity != null) {
+                ing.quantity *= (newServings / this.recipe.servings)
+                return ing
+            }
+
+            return ing
+        })
+
+        this.recipe.servings = newServings;
+
+        // render to DOM
+        const parent = document.querySelector('.recipe__ingredient-list');
+        const labelServings = document.querySelector('.recipe__info-data--people');
+
+        parent.innerHTML = ``;
+        labelServings.textContent = this.recipe.servings
+
+        for (const ingredient of this.recipe.ingredients) {
+            new RecipeIngredient(ingredient, parent).render()
+        }
     }
 }
+
+
+
+
+
+//! ===========================================================================
+//! RECIPE INGREDIENT ITEM COMPONENT - dynamic recipe item on recipe
+//! ===========================================================================
+class RecipeIngredient {
+
+    constructor(ingregient, parent) {
+        this.ingredient = ingregient
+        this.parent = parent
+    }
+
+    render() {
+        const li = document.createElement('li');
+        this.parent.appendChild(li);
+
+        li.className = 'recipe__item'
+        li.innerHTML = `
+            <svg class="recipe__icon">
+                <use href="./image/icons.svg#icon-check"></use>
+            </svg>
+            <div class="recipe__count">${this.ingredient.quantity != null ? decimalToFraction(this.ingredient.quantity) : ''}</div>
+            <div class="recipe__ingredient">
+                <span class="recipe__unit">${this.ingredient.unit}</span>
+                ${this.ingredient.description}
+            </div>
+        `
+    }
+}
+
+
+
 
 
 
@@ -277,24 +339,7 @@ class BtnNext {
             parent.appendChild(button);
 
             // attach onclick event listener
-            button.onclick = () => {
-                App.resultsPage++
-
-                // empty out list and pagination buttons
-                const resultstList = document.querySelector('.results__list');
-                const resultsPages = document.querySelector('.results__pages');
-
-                resultstList.innerHTML = '';
-                resultsPages.innerHTML = '';
-
-                for (let dataValue of App.results[App.resultsPage]) {
-                    new ResultsItem(dataValue).render();
-                }
-
-                // render pagination buttons
-                new BtnPrev().render(App.resultsPage, Object.keys(App.results).length);
-                new BtnNext().render(App.resultsPage, Object.keys(App.results).length);
-            };
+            button.onclick = () => toPaginate('NEXT')
         }
     }
 }
@@ -328,7 +373,8 @@ class BtnPrev {
 
             parent.appendChild(button);
 
-            button.onclick = () => App.resultsPage--;
+            // attach onclick event listener
+            button.onclick = () => toPaginate('PREV')
         }
     }
 }
