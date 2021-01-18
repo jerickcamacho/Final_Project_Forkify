@@ -195,22 +195,23 @@ class Recipe {
 
 
     updateServings(action) {
-        console.log(this)
-
         if (this.recipe.servings == 1 && action == 'SUB') return null
-        if (action == 'ADD') this.recipe.servings++
-        if (action == 'SUB') this.recipe.servings--
 
-        // add/sub relatative to step
+        const newServings = action === 'SUB'
+            ? this.recipe.servings - 1
+            : this.recipe.servings + 1;
+
+        // add/sub relatative to step/newservings/current servings
         this.recipe.ingredients = this.recipe.ingredients.map(ing => {
             if (ing.quantity != null) {
-                if (action == 'ADD') ing.quantity += ing.step;
-                if (action == 'SUB') ing.quantity -= ing.step;
+                ing.quantity *= (newServings / this.recipe.servings)
                 return ing
             }
 
             return ing
         })
+
+        this.recipe.servings = newServings;
 
         // render to DOM
         const parent = document.querySelector('.recipe__ingredient-list');
@@ -248,7 +249,7 @@ class RecipeIngredient {
             <svg class="recipe__icon">
                 <use href="./image/icons.svg#icon-check"></use>
             </svg>
-            <div class="recipe__count">${this.ingredient.quantity != null ? this.ingredient.quantity : ''}</div>
+            <div class="recipe__count">${this.ingredient.quantity != null ? decimalToFraction(this.ingredient.quantity) : ''}</div>
             <div class="recipe__ingredient">
                 <span class="recipe__unit">${this.ingredient.unit}</span>
                 ${this.ingredient.description}
