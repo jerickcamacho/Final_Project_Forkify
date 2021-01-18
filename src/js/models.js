@@ -98,20 +98,7 @@ class Recipe {
         ingredientsParent.className = 'recipe__ingredient-list';
 
         for (const ingredient of this.recipe.ingredients) {
-            const li = document.createElement('li');
-            ingredientsParent.appendChild(li);
-
-            li.className = 'recipe__item'
-            li.innerHTML = `
-                <svg class="recipe__icon">
-                    <use href="./image/icons.svg#icon-check"></use>
-                </svg>
-                <div class="recipe__count">${ingredient.quantity ? ingredient.quantity : ''}</div>
-                <div class="recipe__ingredient">
-                    <span class="recipe__unit">${ingredient.unit}</span>
-                    ${ingredient.description}
-                </div>
-            `
+            new RecipeIngredient(ingredient, ingredientsParent).render()
         }
 
         this.parent.insertAdjacentHTML(`beforeend`, `
@@ -196,8 +183,45 @@ class Recipe {
         // attach eventlistner add the ingredients to shopping list
         const btnShoppingList = document.getElementById('btn-shoppingList');
         btnShoppingList.addEventListener("click", () => addToShoppingList(this.recipe));
+
+        // attach eventlistener to 
     }
 }
+
+
+
+
+
+//! ===========================================================================
+//! RECIPE INGREDIENT ITEM COMPONENT - dynamic recipe item on recipe
+//! ===========================================================================
+class RecipeIngredient {
+
+    constructor(ingregient, parent) {
+        this.ingredient = ingregient
+        this.parent = parent
+    }
+
+    render() {
+        const li = document.createElement('li');
+        this.parent.appendChild(li);
+
+        li.className = 'recipe__item'
+        li.innerHTML = `
+            <svg class="recipe__icon">
+                <use href="./image/icons.svg#icon-check"></use>
+            </svg>
+            <div class="recipe__count">${this.ingredient.quantity ? this.ingredient.quantity : ''}</div>
+            <div class="recipe__ingredient">
+                <span class="recipe__unit">${this.ingredient.unit}</span>
+                ${this.ingredient.description}
+            </div>
+        `
+    }
+}
+
+
+
 
 
 
