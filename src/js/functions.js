@@ -57,8 +57,12 @@ async function getRecipe(recipeID) {
     try {
 
         new Loader('.recipe').render();
-
         const response = await axios.get(`${App.baseurl}/recipes/${recipeID}`);
+
+        // create a copy of the quantity needed for dynamic servigns
+        response.data.data.recipe.ingredients = response.data.data.recipe.ingredients
+            .map(ing => { ing.step = ing.quantity; return ing })
+
         new Recipe(response.data.data.recipe).render();
     }
 

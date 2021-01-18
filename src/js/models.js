@@ -92,7 +92,6 @@ class Recipe {
     }
 
     render() {
-
         this.parent.innerHTML = ``;
         const ingredientsParent = document.createElement('ul');
         ingredientsParent.className = 'recipe__ingredient-list';
@@ -120,16 +119,18 @@ class Recipe {
                     <svg class="recipe__info-icon">
                         <use href="./image/icons.svg#icon-man"></use>
                     </svg>
-                    <span class="recipe__info-data recipe__info-data--people">${this.recipe.servings}</span>
+                    <span class="recipe__info-data recipe__info-data--people">
+                        ${this.recipe.servings}
+                    </span>
                     <span class="recipe__info-text"> servings</span>
 
                     <div class="recipe__info-buttons">
-                        <button class="btn-tiny">
+                        <button class="btn-tiny" id="serving_sub">
                             <svg>
                                 <use href="./image/icons.svg#icon-circle-with-minus"></use>
                             </svg>
                         </button>
-                        <button class="btn-tiny">
+                        <button class="btn-tiny"  id="serving_add">
                             <svg>
                                 <use href="./image/icons.svg#icon-circle-with-plus"></use>
                             </svg>
@@ -174,7 +175,8 @@ class Recipe {
                     </svg>
 
                 </a>
-            </div>`  );
+            </div>`
+        );
 
         // attach eventlistner to like/dislike this recipe  
         const btnLike = document.querySelector('.recipe__love');
@@ -184,7 +186,42 @@ class Recipe {
         const btnShoppingList = document.getElementById('btn-shoppingList');
         btnShoppingList.addEventListener("click", () => addToShoppingList(this.recipe));
 
-        // attach eventlistener to 
+        // attach eventlistener for add/sub servings
+        const btnServingAdd = document.getElementById('serving_add');
+        const btnServingSub = document.getElementById('serving_sub');
+        btnServingAdd.addEventListener('click', () => this.updateServings('ADD'));
+        btnServingSub.addEventListener('click', () => this.updateServings('SUB'));
+    }
+
+
+    updateServings(action) {
+        console.log(this)
+
+        if (this.recipe.servings == 1 && action == 'SUB') return null
+        if (action == 'ADD') this.recipe.servings++
+        if (action == 'SUB') this.recipe.servings--
+
+        // add/sub relatative to step
+        this.recipe.ingredients = this.recipe.ingredients.map(ing => {
+            if (ing.quantity != null) {
+                if (action == 'ADD') ing.quantity += ing.step;
+                if (action == 'SUB') ing.quantity -= ing.step;
+                return ing
+            }
+
+            return ing
+        })
+
+        // render to DOM
+        const parent = document.querySelector('.recipe__ingredient-list');
+        const labelServings = document.querySelector('.recipe__info-data--people');
+
+        parent.innerHTML = ``;
+        labelServings.textContent = this.recipe.servings
+
+        for (const ingredient of this.recipe.ingredients) {
+            new RecipeIngredient(ingredient, parent).render()
+        }
     }
 }
 
@@ -211,7 +248,7 @@ class RecipeIngredient {
             <svg class="recipe__icon">
                 <use href="./image/icons.svg#icon-check"></use>
             </svg>
-            <div class="recipe__count">${this.ingredient.quantity ? this.ingredient.quantity : ''}</div>
+            <div class="recipe__count">${this.ingredient.quantity != null ? this.ingredient.quantity : ''}</div>
             <div class="recipe__ingredient">
                 <span class="recipe__unit">${this.ingredient.unit}</span>
                 ${this.ingredient.description}
