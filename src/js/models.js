@@ -106,7 +106,7 @@ class Recipe {
                 <svg class="recipe__icon">
                     <use href="./image/icons.svg#icon-check"></use>
                 </svg>
-                <div class="recipe__count">${ingredient.quantity}</div>
+                <div class="recipe__count">${ingredient.quantity ? ingredient.quantity : ''}</div>
                 <div class="recipe__ingredient">
                     <span class="recipe__unit">${ingredient.unit}</span>
                     ${ingredient.description}
@@ -277,24 +277,7 @@ class BtnNext {
             parent.appendChild(button);
 
             // attach onclick event listener
-            button.onclick = () => {
-                App.resultsPage++
-
-                // empty out list and pagination buttons
-                const resultstList = document.querySelector('.results__list');
-                const resultsPages = document.querySelector('.results__pages');
-
-                resultstList.innerHTML = '';
-                resultsPages.innerHTML = '';
-
-                for (let dataValue of App.results[App.resultsPage]) {
-                    new ResultsItem(dataValue).render();
-                }
-
-                // render pagination buttons
-                new BtnPrev().render(App.resultsPage, Object.keys(App.results).length);
-                new BtnNext().render(App.resultsPage, Object.keys(App.results).length);
-            };
+            button.onclick = () => toPaginate('NEXT')
         }
     }
 }
@@ -328,7 +311,8 @@ class BtnPrev {
 
             parent.appendChild(button);
 
-            button.onclick = () => App.resultsPage--;
+            // attach onclick event listener
+            button.onclick = () => toPaginate('PREV')
         }
     }
 }

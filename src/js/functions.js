@@ -6,8 +6,9 @@ async function search(event) {
         const response = await axios.get(`${App.baseurl}/recipes?search=${input.value}`);
         const dataRecipes = response.data.data.recipes
 
-        const resultstList = document.querySelector('.results__list');
-        resultstList.innerHTML = '';
+        // empty out list and pagination buttons
+        document.querySelector('.results__list').innerHTML = ``;
+        document.querySelector('.results__pages').innerHTML = ``;
 
         // PAGINATION
         let paginatedRecipes = new Object();
@@ -36,6 +37,8 @@ async function search(event) {
         for (let dataValue of App.results[App.resultsPage]) {
             new ResultsItem(dataValue).render();
         }
+
+        if (Object.keys(App.results).length == 1) return null
 
         // render pagination buttons
         new BtnPrev().render(App.resultsPage, Object.keys(App.results).length);
@@ -99,4 +102,22 @@ function addToShoppingList(recipe) {
         App.shoppinglistStorage.push(ingredient)
         new ShoppingListItem(ingredient).render();
     }
+}
+
+function toPaginate(action) {
+
+    if (action == 'NEXT') App.resultsPage++;
+    if (action == 'PREV') App.resultsPage--;
+
+    // empty out list and pagination buttons
+    document.querySelector('.results__list').innerHTML = ``;
+    document.querySelector('.results__pages').innerHTML = ``;
+
+    for (let dataValue of App.results[App.resultsPage]) {
+        new ResultsItem(dataValue).render();
+    }
+
+    // render pagination buttons
+    new BtnPrev().render(App.resultsPage, Object.keys(App.results).length);
+    new BtnNext().render(App.resultsPage, Object.keys(App.results).length);
 }
