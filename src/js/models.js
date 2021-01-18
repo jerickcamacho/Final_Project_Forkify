@@ -251,6 +251,94 @@ class ShoppingListItem {
 
 
 //! ===========================================================================
+//! NEXT PAGE BTN COMPONENT - navigate results item to next page
+//! ===========================================================================
+class BtnNext {
+    render(numPage, numResults) {
+
+        // render only if first page or page inbetween
+        if (
+            numPage == 1 ||
+            numPage >= 2 && numPage < numResults ||
+            numPage !== numResults
+        ) {
+
+            const parent = document.querySelector('.results__pages');
+            const button = document.createElement('button');
+            button.className = `btn-inline results__btn--next`;
+
+            button.innerHTML = `
+                <span>Page ${numPage + 1}</span >
+                <svg class="search__icon">
+                    <use href="./image/icons.svg#icon-triangle-right"></use>
+                </svg>
+            `
+
+            parent.appendChild(button);
+
+            // attach onclick event listener
+            button.onclick = () => {
+                App.resultsPage++
+
+                // empty out list and pagination buttons
+                const resultstList = document.querySelector('.results__list');
+                const resultsPages = document.querySelector('.results__pages');
+
+                resultstList.innerHTML = '';
+                resultsPages.innerHTML = '';
+
+                for (let dataValue of App.results[App.resultsPage]) {
+                    new ResultsItem(dataValue).render();
+                }
+
+                // render pagination buttons
+                new BtnPrev().render(App.resultsPage, Object.keys(App.results).length);
+                new BtnNext().render(App.resultsPage, Object.keys(App.results).length);
+            };
+        }
+    }
+}
+
+
+
+
+
+//! ===========================================================================
+//! NEXT PREV BTN COMPONENT - navigate results item to prev page
+//! ===========================================================================
+class BtnPrev {
+    render(numPage, numResults) {
+
+        // render only if last page or page inbetween
+        if (
+            numPage == numResults ||
+            numPage >= 2 && numPage < numResults
+        ) {
+
+            const parent = document.querySelector('.results__pages');
+            const button = document.createElement('button');
+            button.className = `btn-inline results__btn--prev`;
+
+            button.innerHTML = `
+                <svg class="search__icon">
+                    <use href="./image/icons.svg#icon-triangle-left"></use>
+                </svg>
+                <span>Page ${numPage - 1}</span>
+            `
+
+            parent.appendChild(button);
+
+            button.onclick = () => App.resultsPage--;
+        }
+    }
+}
+
+
+
+
+
+
+//! ===========================================================================
 //! LOADER COMPONENT - assists in waiting api responses
 //! ===========================================================================
 class Loader {

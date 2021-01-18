@@ -5,6 +5,8 @@ class Application {
         this.baseurl = 'https://forkify-api.herokuapp.com/api/v2';
         this.likestorage = [];
         this.shoppinglistStorage = [];
+        this.resultsPage = 1;
+        this.resultpage = {};
     }
 
 

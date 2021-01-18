@@ -9,9 +9,38 @@ async function search(event) {
         const resultstList = document.querySelector('.results__list');
         resultstList.innerHTML = '';
 
-        for (let dataValue of dataRecipes) {
+        // PAGINATION
+        let paginatedRecipes = new Object();
+        let groupedRecipes = new Array();
+        let groupPage = 1;
+
+        dataRecipes.forEach((recipe, index) => {
+            const isLastItemOfPage = (index + 1) % 10 == 0;
+            const isLastIteration = index == dataRecipes.length - 1
+
+            if (isLastItemOfPage || isLastIteration) {
+                groupedRecipes.push(recipe);
+                paginatedRecipes[groupPage] = groupedRecipes;
+                groupedRecipes = new Array();
+                groupPage++
+            }
+
+            if (!isLastItemOfPage && !isLastIteration)
+                groupedRecipes.push(recipe);
+
+        })
+
+        App.resultsPage = 1
+        App.results = { ...paginatedRecipes }
+
+        for (let dataValue of App.results[App.resultsPage]) {
             new ResultsItem(dataValue).render();
         }
+
+        // render pagination buttons
+        new BtnPrev().render(App.resultsPage, Object.keys(App.results).length);
+        new BtnNext().render(App.resultsPage, Object.keys(App.results).length);
+
     }
 
     catch (error) {
@@ -24,7 +53,7 @@ async function getRecipe(recipeID) {
 
     try {
 
-        new Loader('.recipe').render(); 
+        new Loader('.recipe').render();
 
         const response = await axios.get(`${App.baseurl}/recipes/${recipeID}`);
         new Recipe(response.data.data.recipe).render();
