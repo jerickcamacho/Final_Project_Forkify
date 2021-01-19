@@ -283,7 +283,7 @@ class ShoppingListItem {
 
         shoppingItem.innerHTML = `
             <div class="shopping__count">
-                <input type="number" value="${this.ingredient.quantity}" step="${this.ingredient.quantity}">
+                <input type="number" value="${this.ingredient.quantity}" step="${this.ingredient.step}" min="${this.ingredient.step}">
                 <p>${this.ingredient.unit}</p>
             </div>
                 <p class="shopping__description">${this.ingredient.description}</p>
